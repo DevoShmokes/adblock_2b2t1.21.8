@@ -48,19 +48,13 @@ public class ChatMessageMixin {
                     (filterType.equals("CUSTOM") ? "Custom Filter" : "Remote Filter") : 
                     "Unknown Filter";
 
-                // Create a hover event with the original message
-                HoverEvent hoverEvent = new HoverEvent(
-                    HoverEvent.Action.SHOW_TEXT, 
-                    Text.literal("Filter: " + filterName + "\n").formatted(Formatting.GOLD)
-                        .append(Text.literal("expression: " + MessageFilter.getInstance().getMatchingPattern(messageString) + "\n").formatted(Formatting.GOLD))
-                        .append(Text.literal("Blocked message: ").formatted(Formatting.RED))
-                        .append(Text.literal(messageString).formatted(Formatting.WHITE))
-                );
-
-                // Create the debug message with hover effect
+                // Build a debug message inline (hover event construction changed in 1.21.8)
                 Text debugMessage = Text.literal("[AdBlock] ").formatted(Formatting.DARK_RED)
                     .append(Text.literal("Message blocked").formatted(Formatting.RED))
-                    .setStyle(Style.EMPTY.withHoverEvent(hoverEvent));
+                    .append(Text.literal(" ").formatted(Formatting.WHITE))
+                    .append(Text.literal("[Filter: " + filterName + "] ").formatted(Formatting.GOLD))
+                    .append(Text.literal("[Pattern: " + MessageFilter.getInstance().getMatchingPattern(messageString) + "] ").formatted(Formatting.GOLD))
+                    .append(Text.literal(messageString).formatted(Formatting.WHITE));
 
                 // Replace the original message with our debug message
                 ((ChatHud)(Object)this).addMessage(debugMessage, null, null);
